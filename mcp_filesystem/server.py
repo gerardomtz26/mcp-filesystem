@@ -151,7 +151,7 @@ async def read_multiple_files(
 @mcp.tool()
 async def write_file(
     path: str,
-    content: str,
+    content: Union[str, dict, list],
     ctx: Context,
     encoding: str = "utf-8",
     create_dirs: bool = False,
@@ -160,7 +160,8 @@ async def write_file(
 
     Args:
         path: Path to write to
-        content: Content to write
+        content: Content to write. Accepts a string, or a dict/list which is
+            serialized to JSON text (utf-8 preserved) before writing.
         encoding: File encoding (default: utf-8)
         create_dirs: Whether to create parent directories if they don't exist
         ctx: MCP context
@@ -169,6 +170,8 @@ async def write_file(
         Success or error message
     """
     try:
+        if not isinstance(content, str):
+            content = json.dumps(content, ensure_ascii=False, indent=2)
         components = get_components()
         await components["operations"].write_file(path, content, encoding, create_dirs)
         return f"Successfully wrote to {path}"
