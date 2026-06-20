@@ -83,13 +83,20 @@ def get_components() -> Dict[str, Any]:
     return _components
 
 
-# Create the FastMCP instance
+def _build_auth():
+    domain = os.environ.get("MCP_AUTHKIT_DOMAIN")
+    base = os.environ.get("MCP_PUBLIC_BASE_URL")
+    if domain and base:
+        from fastmcp.server.auth.providers.workos import AuthKitProvider
+        return AuthKitProvider(authkit_domain=domain, base_url=base)
+    return None
+
+
 mcp = FastMCP(
     name="Filesystem MCP Server",
     instructions="Provides secure access to the filesystem through MCP",
-    dependencies=[],
+    auth=_build_auth(),
 )
-
 
 @mcp.tool()
 async def read_file(path: str, ctx: Context, encoding: str = "utf-8") -> str:

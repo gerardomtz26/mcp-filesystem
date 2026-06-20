@@ -21,7 +21,7 @@ classifiers = [
 ]
 keywords = ["mcp", "filesystem", "claude", "ai", "fastmcp"]
 dependencies = [
-    "fastmcp>=0.4.0",
+    "fastmcp>=3,<4",
     "typer>=0.9.0",
     "typing-extensions>=4.6.0",
 ]
